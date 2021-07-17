@@ -1,0 +1,174 @@
+Principios SOLID en Python
+
+S: Principio de responsabilidad única
+
+class Coche:
+    def __init__(self, marca: str):
+        self.marca = marca
+    
+    def get_marca(self) -> str:
+        pass
+
+
+class CocheDB:
+    def get_marca(self, id) -> Coche:
+        pass
+
+    def save(self, coche: Coche):
+        pass
+      
+    def delete(self, coche: Coche):
+        pass
+
+------------------------------------------------------------------------------------------------
+
+O: Principio abierto/cerrado
+
+class Coche:
+    def __init__(self, marca: str):
+        self.marca = marca
+    
+    def get_marca(self) -> str:
+        pass
+
+    def precio_coche(self):
+        pass
+
+class Renault(Coche):
+    def precio_coche(self):
+        return '18000'
+
+
+class Audi(Coche):
+    def precio_coche(self):
+        return '25000'
+
+
+class Mercedes(Coche):
+    def precio_coche(self):
+        return '27000'    
+
+
+coches = [
+  Renault,
+  Audi,
+  Mercedes
+]
+
+def imprimir_precio_coche(coches: list):
+    for coche in coches:
+        print(coche.precio_coche(''))
+
+imprimir_precio_coche(coches)
+
+---------------------------------------------------------------------------------------------------
+
+L: Principio de substitución de Liskov
+
+class Coche:
+    def num_asientos(self):
+        pass
+
+
+class Renault(Coche):
+    def num_asientos(self):
+        return 4
+
+
+class Audi(Coche):
+    def num_asientos(self):
+        return 2
+
+
+class Mercedes(Coche):
+    def num_asientos(self):
+        return 6
+
+class Ford(Coche):
+    def num_asientos(self):
+        return 4
+      
+coches = [
+    Renault,
+    Audi,
+    Mercedes,
+    Ford
+]
+
+def imprimir_num_asientos(coches: list):
+    for coche in coches:
+        if isinstance(coche, Renault):
+            print(num_asientos_renault(coche))
+        elif isinstance(coche, Audi):
+            print(num_asientos_audi(coche))
+        elif isinstance(coche, Mercedes):
+            print(num_asientos_mercedes(coche))
+        elif isinstance(coche, Ford):
+            print(num_asientos_ford(coche))
+        
+imprimir_num_asientos(coches)
+
+def imprimir_num_asientos(coches: list):
+    for coche in coches:
+        print(coche.num_asientos(''))
+        
+imprimir_num_asientos(coches)
+
+---------------------------------------------------------------------------------------------------
+
+I: Principio de segregación de interfaz
+
+class IAve():
+
+    def comer(self):
+       pass
+
+class IAveVoladora:
+
+    def volar(self):
+       pass
+      
+class IAveNadadora:
+
+    def nadar(self):
+       pass
+      
+class Loro(implements(IAve, IAveVoladora)):
+
+    def volar(self):
+       pass
+      
+    def comer(self):
+       pass
+
+class Pinguino(implements(IAve, IAveNadadora)):
+
+    def nadar(self):
+       pass
+      
+    def comer(self):
+       pass
+
+
+
+---------------------------------------------------------------------------------------------------
+
+D: Principio de inversión de dependencias
+
+from abc import ABC, abstractmethod  
+    
+class Conexion(ABC):
+    @abstractmethod	
+    def request(self, url: str):
+        raise NotImplementedError
+	
+class AccesoADatos():
+    def request(self, url: str, options:dict):
+        pass
+	
+class HTTP:
+    def __init__(self, conexion: Conexion):
+        self.conexion = conexion
+
+    def getDatos(self, url: str):
+        self.conexion.request(url, 'GET')
